@@ -1,0 +1,244 @@
+├── index.html
+├── tasks.html
+├── statistics.html
+├── style.css
+└── script.js
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRIORITASK</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="tasks.html">Tarefas</a></li>
+        <li><a href="statistics.html">Estatísticas</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Bem-vindo ao PRIORITASK!</h1>
+    <p>Gerencie suas tarefas de forma eficiente e visualize seu progresso.</p>
+  </main>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRIORITASK - Tarefas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="tasks.html">Tarefas</a></li>
+        <li><a href="statistics.html">Estatísticas</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Gerenciamento de Tarefas</h1>
+    <form id="taskForm">
+      <input type="text" id="taskTitle" placeholder="Título da tarefa" required>
+      <textarea id="taskDescription" placeholder="Descrição da tarefa"></textarea>
+      <button type="submit">Adicionar Tarefa</button>
+    </form>
+
+    <h2>Minhas Tarefas</h2>
+    <ul id="taskList">
+      <!-- As tarefas serão listadas aqui -->
+    </ul>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRIORITASK - Estatísticas</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="tasks.html">Tarefas</a></li>
+        <li><a href="statistics.html">Estatísticas</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Estatísticas das Tarefas</h1>
+    <canvas id="taskChart" width="400" height="200"></canvas>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+  }
+  
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+  }
+  
+  nav ul li {
+    margin: 0 15px;
+  }
+  
+  nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  main {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  h1 {
+    color: #333;
+  }
+  
+  form input, form textarea {
+    padding: 10px;
+    margin: 10px 0;
+    width: 80%;
+    max-width: 400px;
+  }
+  
+  form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background-color: #45a049;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  ul li {
+    background-color: #fff;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  ul li button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  ul li button:hover {
+    background-color: #e53935;
+  }
+  // Função para adicionar tarefa
+document.getElementById('taskForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const taskTitle = document.getElementById('taskTitle').value;
+  const taskDescription = document.getElementById('taskDescription').value;
+
+  if (taskTitle) {
+    const task = {
+      id: Date.now(),
+      title: taskTitle,
+      description: taskDescription,
+      completed: false
+    };
+
+    // Adiciona a tarefa na lista
+    addTaskToList(task);
+    // Limpa o formulário
+    document.getElementById('taskTitle').value = '';
+    document.getElementById('taskDescription').value = '';
+  }
+});
+
+// Função para adicionar tarefa na lista
+function addTaskToList(task) {
+  const taskList = document.getElementById('taskList');
+  const taskItem = document.createElement('li');
+  taskItem.innerHTML = `
+    <div>
+      <strong>${task.title}</strong><br>
+      ${task.description}
+    </div>
+    <button onclick="deleteTask(${task.id})">Excluir</button>
+  `;
+  taskList.appendChild(taskItem);
+}
+
+// Função para excluir tarefa
+function deleteTask(taskId) {
+  const taskList = document.getElementById('taskList');
+  const tasks = taskList.getElementsByTagName('li');
+  
+  for (let task of tasks) {
+    if (task.dataset.id == taskId) {
+      taskList.removeChild(task);
+      break;
+    }
+  }
+}
+
+// Função para gerar gráfico de tarefas
+window.onload = function() {
+  const ctx = document.getElementById('taskChart').getContext('2d');
+  const taskChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Concluídas', 'Pendentes'],
+      datasets: [{
+        label: 'Tarefas',
+        data: [5, 3],  // Exemplo de dados
+        backgroundColor: ['#4CAF50', '#FF9800'],
+      }]
+    },
+    options: {
+      responsive: true,
+    }
+  });
+};
